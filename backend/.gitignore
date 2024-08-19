@@ -1,0 +1,6 @@
+*.tab.cc 
+parser.hpp 
+lex.yy.cc 
+stack.hh
+a.out
+build*

@@ -1,0 +1,17 @@
+bool main(void) {
+    a := 7
+    b := 5
+    while (a > 4) {
+        a := a - 1
+        b := b + 2
+    }
+    void := a
+    while (a < 8) {
+        a := a + 1
+        b := b + 2
+    }
+    while (b = 19) {
+        b := b ^ 1
+        a := a - 1
+    }
+}

@@ -1,0 +1,14 @@
+int sum(a) {
+    b := a - 1
+    c := a - 2
+    if (a < 1) {
+        return
+    }
+    sum(b)
+    sum(c) 
+    a := b + c
+}
+
+bool main(void) {
+    void := sum(5)
+}

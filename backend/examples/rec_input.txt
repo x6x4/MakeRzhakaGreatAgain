@@ -1,0 +1,10 @@
+int sum(a) {
+    if (a < 2) {
+        return
+    }
+    a := sum(a-2) + sum(a - 1) 
+}
+
+int main(void) {
+    void := sum(6)
+}

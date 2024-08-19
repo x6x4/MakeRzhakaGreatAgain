@@ -1,0 +1,24 @@
+cell x(z) {
+    var i
+}
+
+cell five(a) {
+  a := a - 5
+}
+
+bool main(void) {
+  int x
+  cell g 
+  g := empty
+  x := g
+  var fgh
+  fgh := 4 - 20
+  cell c
+  c := wall 
+  bool bz
+  bz := true
+  x := bz + 5
+  void := five(p)
+  int hhhh
+}
+
