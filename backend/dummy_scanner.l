@@ -14,9 +14,9 @@ using namespace std;
 
 <<EOF>>                     {   yyterminate();  }
 
-[\n]+                       { return yytext[0]; }
+[\n]+                       { return '\n'; }
 
-[ \t\r]+                /* skip whitespace */
+[ \t\r\v]+                /* skip whitespace */
 
 "forward"                   { return yy::parser::make_OPER(Oper::FORWARD);}
 "backward"                  { return yy::parser::make_OPER(Oper::BACK);}

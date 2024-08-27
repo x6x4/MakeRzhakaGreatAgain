@@ -33,7 +33,7 @@ class Scanner;
     }
 
     funcTable global_table;
-    Field field("/home/cracky/gptshit/rt.field");
+    Field field("/home/cracky/MakeRzhakaGreatAgain/backend/rt.field");
 }
 
 
@@ -126,7 +126,6 @@ statement:
     | if_stmt           { $$ = $1; }
     | decl_stmt         { $$ = $1; }
     | RET               { $$ = new RetNode(); }
-    | OPER              { $$ = new OperNode($1, field);  }
 ;
 
 while_stmt:
@@ -140,16 +139,16 @@ while_stmt:
 ;
 
 if_stmt:
-    IF '(' expr ')' '{' statements '}' '\n' ELDEF '{' statements '}' '\n' ELUND '{' statements '}' '\n' {
-
+    IF '(' expr ')' '{' '\n' statements '}' '\n' ELDEF '{' '\n' statements '}' '\n' ELUND '{' '\n' statements '}' {
+        $$ = new IfNode($3, $7, $13, $19);
     }
-    | IF '(' expr ')' '{' statements '}' '\n' ELDEF '{' statements '}' '\n' {
-
+    | IF '(' expr ')' '{' '\n' statements '}' '\n' ELDEF '{' '\n' statements '}' '\n' {
+        $$ = new IfNode($3, $7, $13, {});
     }
-    | IF '(' expr ')' '{' statements '}' '\n' ELUND '{' statements '}' '\n' {
-
+    | IF '(' expr ')' '{' '\n' statements '}' '\n' ELUND '{' '\n' statements '}' {
+        $$ = new IfNode($3, $7, {}, $13);
     }
-    | IF '(' expr ')' '{' '\n' statements '}' 
+    | IF '(' expr ')' '{' '\n' statements '}' '\n'
     {
         $$ = new IfNode($3, $7);
     }
@@ -166,6 +165,8 @@ decl_stmt
 } 
 
 expr:
+    OPER              { $$ = new OperNode($1, field);  }
+    |
     IDENTIFIER '(' expr ')'
     {
         $$ = new FunctionCallNode($1, $3, global_table);

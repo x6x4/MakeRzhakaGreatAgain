@@ -29,10 +29,14 @@ public:
     int weight() const {return m_value;}
     Integer IntValue() const { return std::make_pair(m_int, m_value); }
     BoolBase BoolValue() const {
-        if (m_int == IntBase::ZERO)
-            return BoolBase::FALSE;
-        else 
-            return BoolBase::TRUE;
+        switch (m_int) {
+            case IntBase::ZERO:
+                return BoolBase::FALSE;
+            case IntBase::NAN:
+                return BoolBase::UNDEF;
+            default:
+                return BoolBase::TRUE;
+        }
     }
     CellBase CellValue() const {
        switch (m_int) {
@@ -97,8 +101,11 @@ public:
             m_int = IntBase::NUM;
             m_value = 1;
         }
-        else 
+        else if (type == BoolBase::FALSE)
             m_int = IntBase::ZERO;
+        else {
+            m_int = IntBase::NAN; 
+        }
     }
 
 //  operators
@@ -154,9 +161,12 @@ public:
                 }
             break;
             case CurType::BOOL:
-                switch (integer.m_value) {
-                    case 0:
+                switch (integer.m_int) {
+                    case IntBase::ZERO:
                         os << "false";
+                        break;
+                    case IntBase::NAN:
+                        os << "undef";
                         break;
                     default:
                         os << "true"; 
@@ -213,6 +223,7 @@ public:
     }
 
     BoolBase BoolValue() const {
+
         if (!m_base.size()) 
             return BoolBase::FALSE;
         if (m_base.size() > 1)

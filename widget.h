@@ -76,11 +76,11 @@ private slots:
         auto New = m_grid.itemAtPosition(cur.first, cur.second)->widget();
 
         ((QLabel*) New)->setFont(font);
-        ((QLabel*) New)->setText("ROBOT");
+        ((QLabel*) New)->setText("R");
         ((QLabel*) New)->setAlignment(Qt::AlignCenter);
         prev = cur;
         if (prev == exit)
-            ((QLabel*) New)->setText("YOU WON");
+            ((QLabel*) New)->setText("W");
     }
 };
 

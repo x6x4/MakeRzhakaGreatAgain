@@ -39,7 +39,7 @@ Field::Field (const std::string &string) {
 
         while (std::getline(strstream, cell_str, ' ')) {
 
-            CellBase cur_cell_type;
+            CellBase cur_cell_type = CellBase::EMPTY;
             int weight = 0;
 
             switch (cell_str[0]) {
@@ -133,12 +133,16 @@ bool is_barrier (const Cell &to_look, const Field &field) {
 }
 
 BoolBase change_coords (const Field &field, Cell &cell_to_move_from, int d, int w) {
+    
+    std::cout << "Dir: " << (int) field.orient() << std::endl;
     int new_d = cell_to_move_from.first + d;
-    if (new_d > field.depth() || new_d < 0)
-        return BoolBase::FALSE;
+    std::cout << "New_d: " << new_d << std::endl;
+    if (new_d >= field.depth() || new_d < 0)
+        return BoolBase::UNDEF;
     int new_w = cell_to_move_from.second + w;
-    if (new_d > field.width() || new_w < 0)
-        return BoolBase::FALSE;
+    std::cout << "New_w: " << new_w << std::endl;
+    if (new_w >= field.width() || new_w < 0)
+        return BoolBase::UNDEF;
 
     Cell ret = Cell(new_d, new_w);
     if (is_barrier(ret, field))
@@ -230,7 +234,7 @@ Field::send() {
     if (m_socket != -1) {
         write(m_socket, &state, sizeof(state));
     }
-    sleep(1);
+    sleep(0);
 }
 
 Generic Field::do_oper(Oper oper) {

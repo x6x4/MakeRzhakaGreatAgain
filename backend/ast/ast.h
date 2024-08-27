@@ -76,8 +76,8 @@ public:
     : m_value(value), m_name(name) {}
 
     GenericType eval(varTable& vm) override { 
-        if (m_name.empty())  //  immediate
-            return GenericType(m_value); 
+        if (m_name.empty())  //  immediate 
+            { return m_value; }
 
         //  variable
         return vm.getVar(m_name);
