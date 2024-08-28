@@ -47,7 +47,7 @@ signals:
 private slots:
     void update(Orient dir, Cell cur) {
         auto Old = m_grid.itemAtPosition(prev.first, prev.second)->widget();
-        QFont font("Lucida Console", 40);
+        QFont font("Lucida Console", 20);
         ((QLabel*) Old)->setFont(font);
 
         switch (dir) {

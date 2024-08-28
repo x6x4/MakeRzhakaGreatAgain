@@ -1,0 +1,66 @@
+int reverse(a) {
+    right
+    right
+    right
+}
+
+int up(a) {
+    status := t
+    while (status) {
+        left
+        left 
+        status := forward
+        if (status) {
+            right
+            right
+            status := forward
+        } 
+        elund {
+            reverse(0)
+        }
+
+    }
+}
+
+bool toWall(a) {
+    a := look
+    if (a = 0) {
+        return
+    }
+ 
+    while (a > 0) {
+        forward
+        a := a - 1
+    }
+}
+
+int main(void) {
+    void := 6
+    rand := t
+    while (void) {
+        if (rand) {
+            left
+            rand := f
+        }
+        eldef {
+            right
+            rand := t
+        }
+         
+        status := toWall(a)
+        if (status = 0) {
+            right
+            forward
+            left
+            forward
+            left
+            forward
+            left
+            forward
+            right
+            forward
+        }
+ 
+        up(0)
+    }
+}

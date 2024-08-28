@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
 
     FieldGui gui("/home/cracky/MakeRzhakaGreatAgain/backend/rt.field", &main);
 
-    main.resize(600, 600);
+    main.resize(300, 300);
     main.show();
 
     return app.exec();

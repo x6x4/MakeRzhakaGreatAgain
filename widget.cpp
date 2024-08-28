@@ -39,7 +39,7 @@ FieldGui::FieldGui (const std::string &string, QWidget *main) :
         while (std::getline(strstream, cell_str, ' ')) {
 
             labels.push_back(new QLabel());
-            QFont font("Lucida Console", 40);
+            QFont font("Lucida Console", 20);
 
             switch (cell_str[0]) {
                 case 'R':
