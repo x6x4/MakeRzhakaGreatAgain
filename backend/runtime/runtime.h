@@ -20,7 +20,9 @@ enum class Oper {
     LEFT, 
     RIGHT, 
     LOOK, 
-    TEST
+    TEST, 
+    LOAD, 
+    STORE
 };
 
 typedef std::pair <int, int> Cell;
@@ -28,6 +30,8 @@ typedef std::pair <int, int> Cell;
 struct State {
     Cell cell;
     Orient direction;
+    Cell changed;
+    int weight;
 };
 
 class Field {
@@ -39,14 +43,19 @@ class Field {
     int m_width;
     int m_depth;
 
+    //  box
+    Cell m_changed = {0, 0};
+    int m_weight = 0;
+
     std::vector<std::pair<Cell, Generic>> m_cells;
 
 public:
 
     void print() {
-        std::cout << 
-        cur_cell.first << ' ' << 
-        cur_cell.second << '\n';
+        for (const auto &e : m_cells) {
+            std::cout << e.second << ' ' << e.first.first << e.first.second << ' ';
+        }
+        std::cout << std::endl;
     }
 
     void send();
@@ -69,7 +78,11 @@ private:
     BoolBase left();
     CellBase test();
     int look();
+    BoolBase load();
+    BoolBase store();
+    int curWeight();
 
     BoolBase move_from_cell(bool forward, Cell &start_cell);
     int m_socket = 0;
+    std::vector<int> boxes;
 };

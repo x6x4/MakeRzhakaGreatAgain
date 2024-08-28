@@ -15,7 +15,8 @@ public:
     void openServer(const class QString& name);
 
 signals:
-    void newStateReceived(Orient dir, Cell cur);
+    void newStateReceived(Orient dir, Cell cur,
+                          Cell changed, int weight);
 
 private slots:
     void acquireState();

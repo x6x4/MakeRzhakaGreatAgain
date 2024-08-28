@@ -1,0 +1,10 @@
+int main(void) {
+    load
+    forward
+    load
+    forward
+    right
+    backward
+    backward
+    store
+}

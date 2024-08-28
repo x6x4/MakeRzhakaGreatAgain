@@ -18,6 +18,8 @@ using namespace std;
 
 [ \t\r\v]+                /* skip whitespace */
 
+"load"                      { return yy::parser::make_OPER(Oper::LOAD);}
+"store"                     { return yy::parser::make_OPER(Oper::STORE);}
 "forward"                   { return yy::parser::make_OPER(Oper::FORWARD);}
 "backward"                  { return yy::parser::make_OPER(Oper::BACK);}
 "left"                      { return yy::parser::make_OPER(Oper::LEFT);}

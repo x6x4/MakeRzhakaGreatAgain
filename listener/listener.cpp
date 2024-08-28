@@ -27,7 +27,8 @@ Listener::acquireState()
 {
     auto* socket = reinterpret_cast<QLocalSocket*>(sender());
     QDataStream in(socket);
-    State state = {.cell = std::make_pair(2, 1), .direction = Orient::NORTH };
+    State state = {.cell = std::make_pair(0, 0), .direction = Orient::NORTH,
+                  .changed = std::make_pair(0, 0), .weight = 0};
     while(socket->bytesAvailable() >= sizeof(state)) {
         auto nbytes = in.readRawData(reinterpret_cast<char*>(&state), sizeof(State));
 #if 0
@@ -37,7 +38,7 @@ Listener::acquireState()
         qDebug() << "----------------------------------";
 #endif
         if (nbytes == sizeof(State)) {
-            emit newStateReceived(state.direction, state.cell);
+            emit newStateReceived(state.direction, state.cell, state.changed, state.weight);
         }
     }
 }

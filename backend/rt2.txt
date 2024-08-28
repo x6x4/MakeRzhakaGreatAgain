@@ -1,9 +1,0 @@
-int main(void) {
-    forward
-    left
-    backward
-    right
-    forward
-    left 
-    forward
-}

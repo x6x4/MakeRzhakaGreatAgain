@@ -9,14 +9,17 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <sys/un.h>
+#include <utility>
 
 #include "runtime.h"
 
 
 BoolBase Field::move_robot(bool forward) {
     prev_cell = cur_cell;
-    BoolBase status = move_from_cell(forward, cur_cell);
+    Cell tmp_cell = cur_cell;
+    BoolBase status = move_from_cell(forward, tmp_cell);
     if (status != BoolBase::TRUE) std::cout << "stuck" << std::endl;
+    else cur_cell = tmp_cell;
     return status;
 }
 
@@ -115,10 +118,18 @@ BoolBase Field::left() {
 
 const CellBase get_cell_type(const Cell &to_find, const Field &field) {
     for (const auto &entry : field.cells())
-        if (entry.first.first == to_find.first && entry.first.second == to_find.second)
+        if (entry.first == to_find)
             return entry.second.CellValue();
 
     return CellBase::UNDEF;    
+}
+
+int get_cell_weight(const Cell &to_find, const Field &field) {
+    for (const auto &entry : field.cells())
+        if (entry.first == to_find)
+            return entry.second.weight();
+
+    return 0; 
 }
 
 bool is_barrier (const Cell &to_look, const Field &field) {
@@ -145,6 +156,7 @@ BoolBase change_coords (const Field &field, Cell &cell_to_move_from, int d, int 
         return BoolBase::UNDEF;
 
     Cell ret = Cell(new_d, new_w);
+    cell_to_move_from = ret;
     if (is_barrier(ret, field))
         return BoolBase::FALSE;
 
@@ -208,12 +220,8 @@ BoolBase Field::move_from_cell(bool forward, Cell &start_cell) {
 
 CellBase Field::test() {
     Cell to_test = cur_cell;
-    while (move_from_cell(1, to_test) == BoolBase::TRUE)
-        if (is_barrier(to_test, *this)) 
-            return 
-            get_cell_type(to_test, *this);
-
-    return CellBase::WALL;
+    while (move_from_cell(1, to_test) == BoolBase::TRUE);
+    return get_cell_type(to_test, *this);
 }
 
 int Field::look() {
@@ -227,14 +235,70 @@ int Field::look() {
     return dist;
 }
 
+int limit = 14;
+
+int Field::curWeight() {
+    int sum = 0;
+    for (auto e : boxes)
+        sum += e;
+    return sum;
+}
+
+BoolBase Field::load() {
+    if (test() != CellBase::BOX)
+        return BoolBase::UNDEF;
+
+    Cell box = cur_cell;
+    move_from_cell(1, box);
+    int new_weight = get_cell_weight(box, *this);
+
+    if (curWeight() + new_weight < limit) {
+        boxes.push_back(new_weight);
+        for (auto &entry : m_cells) {
+            if (entry.first == box) {
+                entry.second = Generic(CellBase::EMPTY);
+                m_changed = box;
+                m_weight = 0;
+                return BoolBase::TRUE;
+            }   
+        }
+        return BoolBase::UNDEF;
+    }
+    else {
+        return BoolBase::FALSE;
+    }
+}
+
+BoolBase Field::store() {
+    Cell to_store = cur_cell;
+    move_from_cell(1, to_store);
+    if (get_cell_type(to_store, *this) != CellBase::EMPTY)
+        return BoolBase::FALSE;
+    
+    if (to_store != exit) {
+        for (auto &entry : m_cells) {
+            if (entry.first == to_store) {
+                entry.second = Generic(CellBase::BOX, boxes.back());
+                boxes.pop_back();
+                m_changed = to_store;
+                m_weight = entry.second.weight();
+                return BoolBase::TRUE;
+            }   
+        }
+    }
+    return BoolBase::UNDEF;
+}
+
 void 
 Field::send() {
-    std::cout << "New pos {" << cur_cell.first << ", " << cur_cell.second <<"}, dir=" << (uint32_t)direction << "\n";
-    State state{cur_cell, direction};
+    State state{cur_cell, direction, m_changed, m_weight};
     if (m_socket != -1) {
         write(m_socket, &state, sizeof(state));
     }
     sleep(0);
+
+    m_changed = {0,0};
+    m_weight = 0;
 }
 
 Generic Field::do_oper(Oper oper) {
@@ -254,6 +318,14 @@ Generic Field::do_oper(Oper oper) {
             return look();
         case Oper::TEST:
             return test();
+        case Oper::LOAD:
+            ret = load();
+            if (ret == BoolBase::TRUE) send();
+            return ret;
+        case Oper::STORE:
+            ret = store();
+            if (ret == BoolBase::TRUE) send();
+            return ret;
         default:
             return Generic();
     }

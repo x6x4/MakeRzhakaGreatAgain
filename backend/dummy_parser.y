@@ -91,7 +91,6 @@ function_def:
             for (auto stmt : body) {
                 if (stmt->eval(localVars).getRet()) break;
                 localVars.print();
-                field.print();
             }
 
             result = localVars.getVar(sign.second);

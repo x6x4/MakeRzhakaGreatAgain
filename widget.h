@@ -42,12 +42,31 @@ public:
 
 
 signals:
-    void changed(Orient dir, Cell cur);
+    void changed(Orient dir, Cell cur, Cell changed, int weight);
 
 private slots:
-    void update(Orient dir, Cell cur) {
-        auto Old = m_grid.itemAtPosition(prev.first, prev.second)->widget();
+    void update(Orient dir, Cell cur, Cell changed, int weight) {
+
         QFont font("Lucida Console", 20);
+
+        if (changed != std::pair{0, 0}) {
+            auto Changed =
+                m_grid.itemAtPosition(changed.first, changed.second)->widget();
+            ((QLabel*) Changed)->setFont(font);
+
+            if (weight) {
+                ((QLabel*) Changed)->setStyleSheet(QString("background-color: %1;").arg("orange"));
+                ((QLabel*) Changed)->setText(QString("%1").arg(weight));
+            }
+            else {
+                ((QLabel*) Changed)->setStyleSheet(QString("background-color: %1;").arg("yellow"));
+                ((QLabel*) Changed)->setText("");
+            }
+            return;
+        }
+
+        auto Old = m_grid.itemAtPosition(prev.first, prev.second)->widget();
+
         ((QLabel*) Old)->setFont(font);
 
         switch (dir) {

@@ -83,7 +83,8 @@ FieldGui::FieldGui (const std::string &string, QWidget *main) :
 
     auto* m_listener = new Listener(this);
     m_listener->openServer("sock.sock");
-    connect(m_listener, SIGNAL(newStateReceived(Orient, Cell)), this, SLOT(update(Orient, Cell)));
+    connect(m_listener, SIGNAL(newStateReceived(Orient, Cell, Cell, int)),
+            this, SLOT(update(Orient, Cell, Cell, int)));
     fs.close();
 }
 

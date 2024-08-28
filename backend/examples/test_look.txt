@@ -1,0 +1,4 @@
+int main(void) {
+    void := look
+    void := test
+}

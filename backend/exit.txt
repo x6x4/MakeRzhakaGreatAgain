@@ -1,0 +1,34 @@
+int seekForFreeR(dir) {
+    a := look
+    while (a = 0) {
+        right
+        a := look
+    }
+}
+int seekForFreeL(dir) {
+    a := look
+    while (a = 0) {
+        left
+        a := look
+    }
+}
+
+bool go(a) {
+    s := t
+    while (s) {
+        s := forward
+    }
+}
+
+int main(void) {
+    while (t) {
+        seekForFreeR(0)
+        go(0)
+        seekForFreeR(0)
+        go(0)
+        seekForFreeL(0)
+        go(0)
+        seekForFreeL(0)
+        go(0)
+    }
+}
