@@ -295,7 +295,7 @@ Field::send() {
     if (m_socket != -1) {
         write(m_socket, &state, sizeof(state));
     }
-    sleep(0);
+    sleep(1);
 
     m_changed = {0,0};
     m_weight = 0;
